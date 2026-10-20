@@ -1,0 +1,34 @@
+wandb:
+  use: True
+  project_name: GTLongRange_Bact_Nrec_global
+model:
+  n_embed: 256
+  local_component:
+    name: GCN
+  global_component:
+    name: self-attn-transformer
+    parameters:
+      max_seq_len: 603
+      long_range_attention: False
+  decoder:
+    type: linear
+    dual_decoder: True
+  save: model/ #Options: local, wandb, None
+optim:
+  lr: 0.001
+  loss: 'SCELoss'
+  seed: 44
+dataset:
+  h5ad_data: Data/adata_bact_hvg.h5ad
+  name: bactnrec
+  prediction_task: regression
+  prediction_level: node
+  layer_key: log1p_norm
+  sample_key: ['sliding_window_assignment']
+  #group_label: condition
+  spatial_neigbors_kwargs:
+    radius: 200
+    library_key: sample
+  batch_size: 32
+  pct_mask_nodes: 0.3
+  segmentation_robustness: [0.2, 0.5]
